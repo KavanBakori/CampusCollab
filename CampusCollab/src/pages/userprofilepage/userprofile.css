@@ -1,0 +1,194 @@
+.userprof {
+    /* profilepage.css */
+
+    .profile-page {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .profile-container {
+        display: flex;
+        /* max-width: 1200px; */
+        column-gap: 20px;
+        width: 100%;
+        /* background: #ffffff; */
+        border-radius: 10px;
+        /* overflow: hidden; */
+    }
+
+    .profile-left {
+        flex: 1;
+        padding: 30px;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-right {
+        flex: 2;
+        padding: 30px;
+        overflow-y: auto;
+    }
+
+    .profile-pic {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 25px;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-info,
+    .edit-form {
+        width: 100%;
+    }
+
+    .profile-info h1,
+    .edit-form input[name="name"] {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 20px 0;
+        color: #2c3e50;
+    }
+
+    .profile-info p,
+    .edit-form input,
+    .edit-form textarea {
+        margin: 10px 0;
+        font-size: 16px;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .social-links a {
+        color: #db3434;
+        font-size: 24px;
+        transition: color 0.3s ease;
+    }
+
+    .social-links a:hover {
+        color: #b92929;
+    }
+
+    button {
+        background-color: #000000;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #b92929;
+    }
+
+    .edit-form input,
+    .edit-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        color: black;
+        border-radius: 5px;
+        background-color: #ddd;
+    }
+
+    .edit-form textarea {
+        height: 100px;
+        resize: vertical;
+    }
+
+    .cards {
+        display: flex;
+        margin: 0;
+        flex-wrap: wrap;
+        /* gap: 1.5rem; */
+    }
+
+    .card {
+        background-color: #fff;
+        width: 350px;
+        height: 410px;
+        border-radius: 10px;
+        /* overflow: hidden; */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        /* position: relative; */
+
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .card h2 {
+        font-size: 1.25rem;
+        margin: 0 0 0.5rem;
+        color: #ff3d2c;
+    }
+
+    .card p {
+        font-size: 0.9rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .price {
+        display: block;
+        font-size: 1.6rem;
+        font-weight: bold;
+        text-align: end;
+        color: #24930b;
+    }
+
+    .profile-details {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .deadline {
+        font-size: 0.9rem;
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            flex-direction: column;
+        }
+
+        .profile-left,
+        .profile-right {
+            width: 100%;
+        }
+
+        .cards {
+            justify-content: center;
+        }
+    }
+}
