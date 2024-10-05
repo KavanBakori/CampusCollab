@@ -81,7 +81,7 @@ const Allwork = () => {
               />
             )}
             <div 
-              className="absolute right-4 bg-gray-900 rounded-full p-2 cursor-pointer hover:bg-indigo-600 transition-colors"
+              className="absolute right-4 bg-gray-900 rounded-full p-2 cursor-pointer hover:bg-red-600 transition-colors"
               onClick={() => setShowFilters(!showFilters)}
             >
               <Sliders className="text-white" size={20} />
@@ -132,12 +132,12 @@ const Allwork = () => {
               <div className="relative">
                 <img src={project.thumbnailUrl} alt={project.heading} className="w-full h-48 object-cover" />
                 <div className="absolute top-2 right-2 bg-white rounded-full p-2">
-                  <Heart className="text-red-500" size={20} />
+                  {/* <Heart className="text-red-500" size={20} /> */}
                 </div>
               </div>
               <div className="p-4">
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">{project.heading}</h2>
-                <p className="text-gray-600 mb-3">{project.description}</p>
+                <p className="text-gray-600 mb-3">{project.tagline}</p>
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                   <div className='flex'>
                     <img className="w-10 h-10 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyb-20ihVRPmRieKEtuyFXoeqp6puC2yuHY7xUFjtCY9ukoNRj7MyQQHKf3Iu5UaGhERM&usqp=CAU" alt={project.accountName} />

@@ -79,10 +79,11 @@ const AdminProfile = () => {
         setEditedProfile({ ...editedProfile, [e.target.name]: e.target.value });
     };
 
-    const handleCardClick = (card) => {
-        // Assuming you want to navigate to the details of the project when clicking on the card
-        navigate('/projectdetails', { state: { project: card } });
-    };
+    const handleCardClick = (card, heading) => {
+        // Combine both project and projectname in a single state object
+        navigate('/allrequests', { state: { project: card, projectname: heading } });
+      };
+      
 
     const togglePopup = () => {
         setIsPopupOpen(!isPopupOpen);
@@ -96,13 +97,14 @@ const AdminProfile = () => {
         <div className="min-h-screen">
             <Navbar />
             <div className="container mx-auto px-4 py-8">
-                <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
-                    <div className="md:flex">
+                <div className="bg-white rounded-xl  overflow-hidden">
+                    <div className="flex" style={{columnGap:'70px'}}>
                         {/* Left side - Profile Info */}
                         <div className="md:w-1/3 bg-gradient-to-br from-gray-900 to-gray-900 p-8 text-white">
                             <div className="flex flex-col items-center">
                                 <img className="w-48 h-48 rounded-full border-4 border-white shadow-lg mb-6" src="https://thumbs.dreamstime.com/b/businessman-profile-icon-male-portrait-flat-design-vector-illustration-47075253.jpg" alt={user.username} />
                                 <h1 className="text-3xl font-bold mb-2">{user.username}</h1>
+                                <h3 className="text-xl font-bold mb-2 text-red-700">ID : {user.collegeid}</h3>
                                 <div className="flex items-center mb-2">
                                     <FaEnvelope className="mr-2" />
                                     <span>{user.email}</span>
@@ -174,14 +176,14 @@ const AdminProfile = () => {
                             {/* Projects Section */}
                             <div>
                                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">Projects</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                                     {projects.map((card) => (
                                         <div
                                             key={card.heading} // Assuming heading is unique
                                             className="bg-white rounded-lg shadow-md cursor-pointer"
-                                            onClick={() => handleCardClick(card)}
+                                            onClick={() => handleCardClick(card , card.heading)}
                                         >
-                                            <img src={card.thumbnailUrl} alt={card.heading} className="w-full h-32 object-cover" />
+                                            <img src={card.thumbnailUrl} alt={card.heading} style={{height:'200px'}} className="w-full  object-cover" />
                                             <div className="p-4">
                                                 <h3 className="text-xl font-bold">{card.heading}</h3>
                                                 <p className="text-gray-600">{card.tagline}</p>

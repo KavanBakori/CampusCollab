@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const { User, Projects, connectToDatabase } = require('./db'); // Import User model and connectToDatabase function
+const { User, Projects,Application, connectToDatabase } = require('./db'); // Import User model and connectToDatabase function
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 // Register API endpoint
 app.post('/register', async (req, res) => {
-    const { username, email, phone, password, confirmPassword, role } = req.body;
+    const { username,collegeid, email, phone, password, confirmPassword, role } = req.body;
 
     try {
         // Check if the user already exists
@@ -34,6 +34,7 @@ app.post('/register', async (req, res) => {
         // Create a new user
         const newUser = new User({
             username,
+            collegeid,
             email,
             phone,
             password: hashedPassword, // Save the hashed password
@@ -164,8 +165,41 @@ app.post('/submitproject', async (req, res) => {
 
 
 
-// Assuming you're using Mongoose to connect to your MongoDB database
+// accept request
+app.put('/acceptfreelancer/:projectId', async (req, res) => {
+    const { freelancerId } = req.body;  // Get freelancer ID from the request body
 
+    try {
+        const updatedProject = await Projects.findByIdAndUpdate(
+            req.params.projectId, 
+            { 
+              freelancer: freelancerId,  // Update the freelancer field
+              acceptedAt: new Date()     // Set the acceptedAt field to the current date
+            },  
+            { new: true }  // Return the updated document
+        );
+        const updatedfreelancer = await Application.findByIdAndUpdate(
+            freelancerId,
+            { 
+                acceptedAt: new Date()     // Set the acceptedAt field to the current date
+            },  
+            { new: true }  // Return the updated document
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+
+        res.status(200).json(updatedProject);
+    } catch (error) {
+        console.error('Error updating project with freelancer:', error);
+        res.status(500).json({ message: 'Failed to update project with freelancer', error });
+    }
+});
+
+
+
+// Assuming you're using Mongoose to connect to your MongoDB database
 app.get('/fetchprojectsforadminpage/:userid', async (req, res) => {
     try {
         const userid = req.params.userid;
@@ -181,6 +215,70 @@ app.get('/fetchprojectsforadminpage/:userid', async (req, res) => {
     }
 });
 
+
+
+app.get('/fetchprojectsforselectedpersons/:projectid', async (req, res) => {
+    try {
+        const projectid = req.params.projectid;
+
+        // Fetch all projects for the given user
+        const freelancer = await Application.find({ projectId: projectid });
+
+        // Return the projects found
+        res.json(freelancer);
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        res.status(500).json({ message: 'Failed to fetch projects', error });
+    }
+});
+
+
+
+
+// appy to the project
+app.post('/apply', async (req, res) => {
+    const { name, email, phone, idNumber,userid,projectid, agreement } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !phone || !idNumber || agreement === undefined) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    try {
+        // Create a new application document
+        const newApplication = new Application({
+            userId: userid,
+            projectId: projectid,
+            name,
+            email,
+            phone,
+            idNumber,
+            agreement,
+        });
+
+        // Save the application to the database
+        await newApplication.save();
+
+        res.status(201).json({ message: 'Application submitted successfully' });
+    } catch (error) {
+        console.error('Error saving the application:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+// Add this new route to get all applications
+app.get('/fetchapplications/:id', async (req, res) => {
+    try {
+        // Fetch all applications from the database
+        const id = req.params.id;
+        const applications = await Application.find({projectId:id});
+        res.status(200).json(applications);
+    } catch (error) {
+        console.error('Error fetching applications:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 
 

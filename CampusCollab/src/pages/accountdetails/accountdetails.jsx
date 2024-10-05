@@ -48,6 +48,7 @@ const Accountdetails = () => {
                                 alt={user.username} 
                             />
                             <h1 className="text-3xl font-bold mb-2">{user.username}</h1>
+                            <h3 className="text-xl font-bold mb-2 text-gray-400">ID : {user.collegeid}</h3>
                         </div>
                         <div className="space-y-4">
                             <p className="flex items-center text-lg">

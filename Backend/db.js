@@ -7,6 +7,10 @@ const userSchema = new Schema({
         type: String,
         require: true,
     },
+    collegeid: {
+        type: String,
+        require: true,
+    },
     email: {
         type: String,
         require: true,
@@ -34,20 +38,6 @@ const userSchema = new Schema({
     linkedin: {
         type: String,
     },
-    projects: [
-        {
-          heading: String,
-          tagline: String,
-          description: String,
-          price: Number,
-          duration: Number,
-          category: String,
-          createdAt: {
-            type: Date,
-            default: Date.now, // Set default value for createdAt
-          },
-        },
-      ],
 
 });
 
@@ -61,18 +51,61 @@ const projectSchema = new mongoose.Schema({
     category: String,
     userId: String,
     username: String,
+    freelancer: String,  // Store the freelancer's ID
     createdAt: {
       type: Date,
       default: Date.now,
     },
-    thumbnailUrl:String,
-  });
+    acceptedAt: {
+      type: Date,
+    },
+    thumbnailUrl: String,
+});
+
+
+
+  const applicationSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: Number,
+        required: true,
+    },
+    idNumber: {
+        type: String,
+        required: true,
+    },
+    userId: {
+        type: String,
+    },
+    projectId: {
+        type: String,
+    },
+    agreement: {
+        type: Boolean,
+        required: true,
+    },
+    submittedAt: {
+        type: Date,
+        default: Date.now,
+    },
+    acceptedAt: {
+        type: Date,
+    },
+});
 
 
 // Export the User and Authuser models
 module.exports = {
     User: mongoose.model('User', userSchema),
     Projects: mongoose.model('Project', projectSchema),
+    Application: mongoose.model('Application', applicationSchema),
     connectToDatabase: async () => {
         try {
             await mongoose.connect('mongodb://127.0.0.1:27017/Campuscollab', {

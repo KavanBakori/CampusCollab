@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 const SignUp = () => {
   const [formData, setFormData] = useState({
     username: '',
+    collegeid: '',
     email: '',
-    phone: '', // Added phone field
+    phone: '',
     password: '',
     confirmPassword: '',
     role: '',
@@ -28,25 +29,45 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    // Password validation (example)
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:3001/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // Make sure formData contains all necessary fields
+        body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to register');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to register');
       }
-  
-      const data = await response.json(); // This will parse the response as JSON
-      alert('Registration successful');
-      navigate('/');
+
+      const data = await response.json(); // Assuming response contains some message/data
+
+      setSuccessMessage('Registration successful');
+      setErrorMessage('');
+      setFormData({
+        username: '',
+        collegeid: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        role: '',
+      });
+
+      setTimeout(() => navigate('/'), 2000);
     } catch (error) {
-      alert('Registration failed please try later');
+      setErrorMessage(error.message);
+      setSuccessMessage('');
     }
   };
   
@@ -89,6 +110,20 @@ const SignUp = () => {
                   type="text"
                   name="username"
                   value={formData.username}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-semibold mb-2">College ID</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  type="text"
+                  name="collegeid"
+                  value={formData.collegeid}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
                   required

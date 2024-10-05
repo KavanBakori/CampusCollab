@@ -83,7 +83,7 @@ const formatDate = (date) => {
               <DetailItem icon={DollarSign} label="Budget" value={card.price} />
               <DetailItem icon={User} label="Client" value={card.username} />
               <DetailItem icon={Briefcase} label="Category" value={card.category} />
-              <DetailItem icon={Calendar} label="Posted" value={formatDate(card.createdAt)} />
+              <DetailItem icon={Calendar} label="Posted Date" value={formatDate(card.createdAt)} />
             </div>
 
             <div className="border-t border-gray-200 pt-8">
@@ -102,7 +102,7 @@ const formatDate = (date) => {
                   Apply Now
                 </button>
                 {/* Pop-up Form */}
-                <PopupForm isOpen={isPopupOpen} onClose={closePopup} />
+                <PopupForm isOpen={isPopupOpen} onClose={closePopup} userid={card.userId} projectid={card._id} />
               </div>
             </div>
           </div>
