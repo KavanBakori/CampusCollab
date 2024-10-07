@@ -94,9 +94,9 @@ const AdminProfile = () => {
     if (!user) return <div>No user data available</div>;
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen ">
             <Navbar />
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-8 ">
                 <div className="bg-white rounded-xl  overflow-hidden">
                     <div className="flex" style={{columnGap:'70px'}}>
                         {/* Left side - Profile Info */}

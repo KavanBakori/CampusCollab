@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import BannerImage from "../Assets/workingG.jpg";
 import Navbar from "./Navbar";
 
-const Hero = ({user, setUser}) => {
+const Hero = () => {
   const navigate = useNavigate();
 
   return (
     <>
-    <Navbar user={user} setUser={setUser}/>
+    <Navbar/>
     <div className="min-h-screen w-full  ">
       {/* Navbar placeholder */}
       

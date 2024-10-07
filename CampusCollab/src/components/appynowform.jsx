@@ -1,29 +1,52 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios to make HTTP requests
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const PopupForm = ({ isOpen, onClose, userid, projectid }) => {
-  // Manage form data with state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     idNumber: '',
-    agreement: false,
+    agreement: false
   });
 
-  // Manage form submission status
   const [submissionStatus, setSubmissionStatus] = useState(null);
 
-  // Handle form input changes
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!isOpen) return;
+      
+      try {
+        const response = await axios.get('http://localhost:3001/fetchuserdetails');
+        if (response.data && response.data.length > 0) {
+          const userData = response.data[0];
+          setFormData({
+            name: userData.username || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            idNumber: userData.collegeid || '',
+            agreement: false
+          });
+        } else {
+          console.error('No user data found.');
+          setSubmissionStatus('error');
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        setSubmissionStatus('error');
+      }
+    };
+
+    fetchUser();
+  }, [isOpen]);
+
+  const handleAgreementChange = (e) => {
+    setFormData(prevData => ({
+      ...prevData,
+      agreement: e.target.checked
+    }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -34,6 +57,7 @@ const PopupForm = ({ isOpen, onClose, userid, projectid }) => {
       });
       setSubmissionStatus('success');
       console.log('Form submitted successfully:', response.data);
+      setTimeout(() => onClose(), 2000); // Close the form after 2 seconds
     } catch (error) {
       setSubmissionStatus('error');
       console.error('Error submitting form:', error);
@@ -47,74 +71,60 @@ const PopupForm = ({ isOpen, onClose, userid, projectid }) => {
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto p-8 relative">
         <h2 className="text-2xl font-bold text-center mb-6">Apply for Project</h2>
 
-        {/* Show success or error message */}
         {submissionStatus === 'success' && <p className="text-green-500">Application submitted successfully!</p>}
-        {submissionStatus === 'error' && <p className="text-red-500">There was an error submitting the form.</p>}
+        {submissionStatus === 'error' && <p className="text-red-500">There was an error. Please try again later.</p>}
 
         <form className="space-y-4 text-left" onSubmit={handleSubmit}>
-          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter your name"
-              required
+              readOnly
+              className="w-full p-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
             />
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Personal Email ID</label>
             <input
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter your email"
-              required
+              readOnly
+              className="w-full p-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
             />
           </div>
 
-          {/* Phone Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Phone Number</label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter your phone number"
-              required
+              readOnly
+              className="w-full p-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
             />
           </div>
 
-          {/* ID Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700">ID Number</label>
             <input
               type="text"
               name="idNumber"
               value={formData.idNumber}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter your ID number"
-              required
+              readOnly
+              className="w-full p-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
             />
           </div>
 
-          {/* Agreement */}
           <div className="flex items-start">
             <input
               type="checkbox"
               name="agreement"
               checked={formData.agreement}
-              onChange={handleChange}
+              onChange={handleAgreementChange}
               id="agreement"
               className="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
               required
@@ -124,7 +134,6 @@ const PopupForm = ({ isOpen, onClose, userid, projectid }) => {
             </label>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition duration-300"
@@ -133,11 +142,7 @@ const PopupForm = ({ isOpen, onClose, userid, projectid }) => {
           </button>
         </form>
 
-        {/* Close "X" Button on the top right */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-        >
+        <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
           &#10005;
         </button>
       </div>

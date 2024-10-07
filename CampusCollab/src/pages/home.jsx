@@ -5,10 +5,10 @@ import Testimonial from "../components/Testimonial";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 
-function Home({user, setUser}) {
+function Home() {
   return (
-    <div className="App">
-      <Hero user={user} setUser={setUser} />
+    <div className="App ">
+      <Hero  />
       <About />
       <Work />
       <Testimonial />

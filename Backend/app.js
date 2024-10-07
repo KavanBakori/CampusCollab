@@ -76,10 +76,22 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Add the get route for fetch user profile
+// Add the get route for fetch admin profile
 app.get('/fetchadmindetails', async (req, res) => {
     try {
-        const users = await User.find(); // Fetch all users (admins in this case)
+        const users = await User.find({role:"Senior"}); // Fetch all users (admins in this case)
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching admin details:', error);
+        res.status(500).json({ message: 'Failed to fetch admin details', error });
+    }
+});
+
+
+// Add the get route for fetch user profile
+app.get('/fetchuserdetails', async (req, res) => {
+    try {
+        const users = await User.find({role:"Junior"}); // Fetch all users (admins in this case)
         res.json(users);
     } catch (error) {
         console.error('Error fetching admin details:', error);
@@ -98,7 +110,6 @@ app.get('/fetchaccountdetails/:id', async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch admin details', error });
     }
 });
-
 
 
 // Add the get route for fetch user profile
@@ -217,6 +228,25 @@ app.get('/fetchprojectsforadminpage/:userid', async (req, res) => {
 
 
 
+
+// Assuming you're using Mongoose to connect to your MongoDB database
+app.get('/fetchprojectsforuserpage/:projectid', async (req, res) => {
+    try {
+        const projectid = req.params.projectid;
+
+        // Fetch all projects for the given user
+        const projects = await Projects.find({ _id: projectid });
+
+        // Return the projects found
+        res.json(projects);
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        res.status(500).json({ message: 'Failed to fetch projects', error });
+    }
+});
+
+
+
 app.get('/fetchprojectsforselectedpersons/:projectid', async (req, res) => {
     try {
         const projectid = req.params.projectid;
@@ -237,15 +267,13 @@ app.get('/fetchprojectsforselectedpersons/:projectid', async (req, res) => {
 
 // appy to the project
 app.post('/apply', async (req, res) => {
-    const { name, email, phone, idNumber,userid,projectid, agreement } = req.body;
+    const { name, email, phone, idNumber, userid, projectid, agreement } = req.body;
 
-    // Validate required fields
     if (!name || !email || !phone || !idNumber || agreement === undefined) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     try {
-        // Create a new application document
         const newApplication = new Application({
             userId: userid,
             projectId: projectid,
@@ -256,9 +284,7 @@ app.post('/apply', async (req, res) => {
             agreement,
         });
 
-        // Save the application to the database
         await newApplication.save();
-
         res.status(201).json({ message: 'Application submitted successfully' });
     } catch (error) {
         console.error('Error saving the application:', error);
@@ -267,12 +293,28 @@ app.post('/apply', async (req, res) => {
 });
 
 
+
 // Add this new route to get all applications
 app.get('/fetchapplications/:id', async (req, res) => {
     try {
         // Fetch all applications from the database
         const id = req.params.id;
         const applications = await Application.find({projectId:id});
+        res.status(200).json(applications);
+    } catch (error) {
+        console.error('Error fetching applications:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+
+// Add this new route to get all applications for user profile
+app.get('/fetchapplicationsforuserprofilepage/:email', async (req, res) => {
+    try {
+        // Fetch all applications from the database
+        const email = req.params.email;
+        const applications = await Application.find({email:email});
         res.status(200).json(applications);
     } catch (error) {
         console.error('Error fetching applications:', error);
