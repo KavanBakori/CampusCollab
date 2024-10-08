@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Lock, CheckSquare, Briefcase, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -36,6 +37,12 @@ const SignUp = () => {
       return;
     }
 
+    Object.keys(formData).forEach(key => {
+      if (key !== 'confirmPassword') {
+        Cookies.set(key, formData[key], { expires: 7 }); // Expires in 7 days
+      }
+    });
+
     try {
       const response = await fetch('http://localhost:3001/register', {
         method: 'POST',
@@ -64,13 +71,20 @@ const SignUp = () => {
         role: '',
       });
 
+      console.log('Cookie data:');
+      console.log('Username:', Cookies.get('username'));
+      console.log('College ID:', Cookies.get('collegeid'));
+      console.log('Email:', Cookies.get('email'));
+      console.log('Phone:', Cookies.get('phone'));
+      console.log('Role:', Cookies.get('role'));
+
       setTimeout(() => navigate('/'), 2000);
     } catch (error) {
       setErrorMessage(error.message);
       setSuccessMessage('');
     }
   };
-  
+
 
   return (
     <div className="flex w-full min-h-screen bg-gradient-to-br from-gray-700 to-red-200 items-center justify-center p-5">

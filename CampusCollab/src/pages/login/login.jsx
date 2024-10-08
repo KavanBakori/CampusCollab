@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,8 @@ const Login = () => {
     });
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -33,6 +36,13 @@ const Login = () => {
       if (!response.ok) {
         throw new Error('Login failed');
       }
+
+      Object.keys(formData).forEach(key => {
+          Cookies.set(key, formData[key], { expires: 7 }); // Expires in 7 day
+      });
+
+      console.log('Cookie data:');
+      console.log('Email:', Cookies.get('email'));
 
       const data = await response.json();
       alert('Login successful');

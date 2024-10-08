@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import Cookies from 'js-cookie';  // Import js-cookie for cookie management
 import { HomeIcon, InformationCircleIcon, ChatBubbleLeftRightIcon, PhoneIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    // Check if user data exists in cookies (username or email)
+    const username = Cookies.get("username");
+    const email = Cookies.get("email");
+
+    // If either username or email exists, the user is logged in
+    setIsLoggedIn(!!username || !!email);
+  }, []);
+
+  const handleLogout = () => {
+    // Remove cookies when the user logs out
+    Cookies.remove("username");
+    Cookies.remove("email");
+    
+    // Update login state and redirect to homepage
+    setIsLoggedIn(false);
+    navigate('/');
+  };
 
   const menuOptions = [
     { text: "Home", icon: HomeIcon, href: "/" },
@@ -33,8 +54,45 @@ const Navbar = () => {
     </Link>
   );
 
+  const AuthButton = () => {
+    if (isLoggedIn) {
+      return (
+        <div className="flex items-center space-x-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-gray-700 hover:text-red-600 transition duration-300 ease-in-out"
+            onClick={() => navigate('/profile')}
+          >
+            <UserCircleIcon className="h-8 w-8" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-red-600 text-white px-4 py-2 rounded-full font-medium hover:bg-red-700 transition duration-300 ease-in-out"
+            onClick={handleLogout}  // Call handleLogout on click
+          >
+            Logout
+          </motion.button>
+        </div>
+      );
+    } else {
+      return (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-red-600 text-white px-4 py-2 rounded-full font-medium hover:bg-red-700 transition duration-300 ease-in-out flex items-center space-x-2"
+          onClick={() => navigate('/signup')}
+        >
+          <UserCircleIcon className="h-5 w-5" />
+          <span>Login</span>
+        </motion.button>
+      );
+    }
+  };
+
   return (
-    <nav >
+    <nav>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -57,15 +115,7 @@ const Navbar = () => {
                 </div>
               </NavLink>
             ))}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-red-600 text-white px-4 py-2 rounded-full font-medium hover:bg-red-700 transition duration-300 ease-in-out flex items-center space-x-2"
-              onClick={() => navigate('/signup')}
-            >
-              <UserCircleIcon className="h-5 w-5" />
-              <span>Login</span>
-            </motion.button>
+            <AuthButton />
           </div>
           <div className="md:hidden flex items-center">
             <motion.button
@@ -110,17 +160,9 @@ const Navbar = () => {
                   </div>
                 </Link>
               ))}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                className="w-full bg-red-600 text-white px-3 py-2 rounded-md text-base font-medium hover:bg-red-700 transition duration-300 ease-in-out flex items-center justify-center space-x-2"
-                onClick={() => {
-                  navigate('/signup');
-                  setIsOpen(false);
-                }}
-              >
-                <UserCircleIcon className="h-5 w-5" />
-                <span>Login</span>
-              </motion.button>
+              <div className="px-3 py-2">
+                <AuthButton />
+              </div>
             </div>
           </motion.div>
         )}

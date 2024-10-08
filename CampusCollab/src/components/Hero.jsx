@@ -10,7 +10,7 @@ const Hero = () => {
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <div className="min-h-screen w-full  ">
       {/* Navbar placeholder */}
       
