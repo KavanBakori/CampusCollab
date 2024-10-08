@@ -32,7 +32,7 @@ const Hero = () => {
               Empowering juniors to gain real-world experience by collaborating with senior students on impactful projects.
             </p>
             <br />
-            <motion.button 
+            {/* <motion.button 
             style={{margin:'auto '}}
               className="group flex items-center px-8 py-4 bg-gradient-to-r from-red-600 to-red-600 text-white font-semibold rounded-full transition duration-300 hover:shadow-lg hover:from-red-700 hover:to-pink-700"
               onClick={() => navigate('allworks')}
@@ -41,7 +41,7 @@ const Hero = () => {
             >
               Find work 
               <FiArrowRight className="ml-3 text-xl transition-transform duration-300 group-hover:translate-x-2" />
-            </motion.button>
+            </motion.button> */}
           </motion.div>
           
           <motion.div 

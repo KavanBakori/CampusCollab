@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import Cookies from 'js-cookie';  // Import js-cookie for cookie management
-import axios from 'axios';  // Import axios for making HTTP requests
+import Cookies from 'js-cookie';  
+import axios from 'axios';  
 import { HomeIcon, InformationCircleIcon, ChatBubbleLeftRightIcon, PhoneIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
@@ -15,17 +15,14 @@ const Navbar = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check if user data exists in cookies (username or email)
     const username = Cookies.get("username");
     const email = Cookies.get("email");
-
-    // If either username or email exists, the user is logged in
     setIsLoggedIn(!!username || !!email);
   }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const email = Cookies.get("email"); // Fetch email from cookies
+      const email = Cookies.get("email"); 
       if (!email) {
         setLoading(false);
         return;
@@ -34,7 +31,7 @@ const Navbar = () => {
         setLoading(true);
         const response = await axios.get(`http://localhost:3001/fetchadminuserdetails/${email}`);
         if (response.data && response.data.length > 0) {
-          setUser(response.data[0]); // Assuming we're dealing with the first user
+          setUser(response.data[0]); 
         } else {
           setError('No user data found.');
         }
@@ -47,15 +44,11 @@ const Navbar = () => {
     };
 
     fetchUser();
-  }, []); // No dependency on email; fetch when component mounts
-
+  }, []); 
 
   const handleLogout = () => {
-    // Remove cookies when the user logs out
     Cookies.remove("username");
     Cookies.remove("email");
-
-    // Update login state and redirect to homepage
     setIsLoggedIn(false);
     navigate('/');
   };
@@ -63,9 +56,13 @@ const Navbar = () => {
   const menuOptions = [
     { text: "Home", icon: HomeIcon, href: "/" },
     { text: "About", icon: InformationCircleIcon, href: "/#aboutUS" },
-    { text: "Explore", icon: ChatBubbleLeftRightIcon, href: "/allworks" },
     { text: "Contact", icon: PhoneIcon, href: "/#contactus" },
   ];
+
+  // Conditionally add "Explore" for Junior users
+  if (isLoggedIn && user?.role === "Junior") {
+    menuOptions.splice(2, 0, { text: "Explore", icon: ChatBubbleLeftRightIcon, href: "/allworks" });
+  }
 
   const NavLink = ({ href, children }) => (
     <Link to={href}>
