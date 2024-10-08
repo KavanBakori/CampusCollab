@@ -76,13 +76,13 @@ const About = () => {
               >
                 Learn More
               </motion.button>
-              <motion.button 
+              {/* <motion.button 
                 whileHover={{ scale: 1.05, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-gray-800 py-3 px-8 rounded-full font-semibold transition duration-300 ease-in-out transform hover:-translate-y-1 hover:bg-gray-100 flex items-center justify-center gap-2"
               >
                 <BsFillPlayCircleFill className="text-2xl text-red-600" /> Watch Video
-              </motion.button>
+              </motion.button> */}
             </motion.div>
           </motion.div>
         </div>

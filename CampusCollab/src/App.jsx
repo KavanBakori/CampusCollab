@@ -11,6 +11,8 @@ import AdminProfile from "./pages/adminprofilepage/adminprofilepage";
 import ProjectDetails from "./pages/projectdetails/projectdetails";
 import Allrequests from "./pages/allrequestpage/allrequest";
 import "./App.css";
+import AboutUs from "./pages/aboutus";
+import ContactUs from "./pages/contactus";
 
 // This is the ProjectDetails component we created earlier
 
@@ -19,7 +21,9 @@ const App = () => {
   return (
     <Routes>
       <Route exact path="/" element={<Home/>}/>
+      <Route exact path="/aboutus" element={<AboutUs/>}/>
       <Route exact path="/allworks" element={<Allworks/>}/>
+      <Route exact path="/contactus" element={<ContactUs/>}/>
       <Route exact path="/signup" element={<SignUp/>}/>
       <Route exact path="/login" element={<LogIn/>}/>
       <Route exact path="/projectdetails" element={<ProjectDetails/>}/>

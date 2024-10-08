@@ -55,8 +55,8 @@ const Navbar = () => {
 
   const menuOptions = [
     { text: "Home", icon: HomeIcon, href: "/" },
-    { text: "About", icon: InformationCircleIcon, href: "/#aboutUS" },
-    { text: "Contact", icon: PhoneIcon, href: "/#contactus" },
+    { text: "About", icon: InformationCircleIcon, href: "/aboutus" },
+    { text: "Contact", icon: PhoneIcon, href: "/contactus" },
   ];
 
   // Conditionally add "Explore" for Junior users
