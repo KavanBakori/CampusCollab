@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Cookies from 'js-cookie';  // Import js-cookie for cookie management
+import axios from 'axios';  // Import axios for making HTTP requests
 import { HomeIcon, InformationCircleIcon, ChatBubbleLeftRightIcon, PhoneIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
@@ -9,6 +10,9 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Check if user data exists in cookies (username or email)
@@ -19,11 +23,38 @@ const Navbar = () => {
     setIsLoggedIn(!!username || !!email);
   }, []);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const email = Cookies.get("email"); // Fetch email from cookies
+      if (!email) {
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://localhost:3001/fetchadminuserdetails/${email}`);
+        if (response.data && response.data.length > 0) {
+          setUser(response.data[0]); // Assuming we're dealing with the first user
+        } else {
+          setError('No user data found.');
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        setError('Failed to fetch user details. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []); // No dependency on email; fetch when component mounts
+
+
   const handleLogout = () => {
     // Remove cookies when the user logs out
     Cookies.remove("username");
     Cookies.remove("email");
-    
+
     // Update login state and redirect to homepage
     setIsLoggedIn(false);
     navigate('/');
@@ -62,15 +93,18 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="text-gray-700 hover:text-red-600 transition duration-300 ease-in-out"
-            onClick={() => navigate('/profile')}
+            onClick={() => {
+              user?.role === "Junior" ? navigate('/userprofile') : navigate('/adminprofile');
+            }}
           >
             <UserCircleIcon className="h-8 w-8" />
           </motion.button>
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-red-600 text-white px-4 py-2 rounded-full font-medium hover:bg-red-700 transition duration-300 ease-in-out"
-            onClick={handleLogout}  // Call handleLogout on click
+            onClick={handleLogout}
           >
             Logout
           </motion.button>

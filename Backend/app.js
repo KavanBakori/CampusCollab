@@ -88,6 +88,20 @@ app.get('/fetchadmindetails', async (req, res) => {
 });
 
 
+
+// Add the get route for fetch admin and user profile
+app.get('/fetchadminuserdetails/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+        const users = await User.find({email:email}); // Fetch all users (admins in this case)
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching admin details:', error);
+        res.status(500).json({ message: 'Failed to fetch admin details', error });
+    }
+});
+
+
 // Add the get route for fetch user profile
 app.get('/fetchuserdetails', async (req, res) => {
     try {
