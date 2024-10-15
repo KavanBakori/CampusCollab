@@ -29,7 +29,7 @@ const Hero = () => {
               </span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-lg" style={{margin:'auto'}}>
-              Empowering juniors to gain real-world experience by collaborating with senior students on impactful projects.
+              Empowering freelancer students to gain real-world experience by collaborating with Client students on impactful projects.
             </p>
             <br />
             {/* <motion.button 

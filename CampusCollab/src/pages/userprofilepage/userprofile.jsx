@@ -26,6 +26,11 @@ const Userprofile = () => {
         });
     };
 
+
+    const handleCardClick = (project) => {
+        navigate('/projectdetails', { state: project });
+      };
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -121,16 +126,16 @@ const Userprofile = () => {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-900 text-white">
+            <div className="min-h-screen  text-white">
                 <div className="container mx-auto p-6">
                     {loading ? (
                         <p>Loading...</p>
                     ) : error ? (
                         <p>{error}</p>
                     ) : (
-                        <div className="grid lg:grid-cols-2 gap-6">
+                        <div className="grid lg:grid-cols-2 ">
                             {/* Profile Section */}
-                            <div className="bg-gray-800 p-8 rounded-lg shadow-lg">
+                            <div className="bg-gray-800 p-8 rounded-lg shadow-lg" style={{width:'70%'}}>
                                 <img
                                     className="rounded-full h-32 w-32 mx-auto mb-4 border-4 border-red-600"
                                     src={'https://thumbs.dreamstime.com/b/businessman-profile-icon-male-portrait-flat-design-vector-illustration-47075253.jpg'}
@@ -228,18 +233,20 @@ const Userprofile = () => {
                             </div>
 
                             {/* Project Section */}
-                            <div className="bg-gray-900 p-10 rounded-xl shadow-2xl">
-                                <h2 className="text-4xl font-extrabold mb-8 text-white border-b-2 border-red-500 pb-4">
+                            <div className="p-10 rounded-xl " style={{marginLeft:'-170px'}}>
+                                <h2 className="uppercase tracking-wider text-red-600 font-bold text-2xl mb-6 border-b-2 border-red-400 pb-2">
                                     Selected Projects
                                 </h2>
-                                <div className="space-y-8">
+                                <div className="space-y-8 ">
                                     {projects.length > 0 ? (
                                         projects.map((project) => (
-                                            <div key={project._id} className="bg-gray-800 p-8 rounded-lg shadow-lg flex hover:shadow-2xl transition-shadow duration-300" style={{ columnGap: '20px' }}>
+                                            <div key={project._id} className="p-8 rounded-lg shadow-lg flex hover:shadow-2xl transition-shadow duration-300" style={{columnGap: '20px' }}>
                                                 {/* Left Section with Image & User */}
-                                                <div className="flex w-full flex-col">
+                                                <div className="flex w-full flex-col" >
                                                     <img
                                                         src={project.thumbnailUrl}
+                                                        onClick={() => handleCardClick(project)}
+                                                        style={{cursor:'pointer'}}
                                                         alt={project.title}
                                                         className="w-full h-48 object-cover rounded-lg hover:opacity-90 transition-opacity duration-300"
                                                     />
@@ -260,18 +267,18 @@ const Userprofile = () => {
                                                 <div className="flex flex-col justify-between">
                                                     <div>
                                                         <h3 className="text-2xl font-bold text-red-400 mb-2">{project.heading}</h3>
-                                                        <p className="text-gray-300 mb-4">{project.tagline}</p>
+                                                        <p className="text-gray-800 mb-4">{project.tagline}</p>
                                                     </div>
 
                                                     <div className="flex justify-between items-center mt-4">
-                                                        <span className="text-2xl text-gray-100 ">${project.price}</span>
+                                                        <span className="text-2xl font-bold text-gray-900 ">${project.price}</span>
 
                                                         {/* Project Status */}
                                                         <div className="text-right">
                                                             {project.acceptedAt ? (
                                                                 <>
-                                                                    <span className="block text-gray-200">Accepted: {formatDate(project.acceptedAt)}</span>
-                                                                    <span className="block text-red-400">Days Remaining: {calculateRemainingDays(project.acceptedAt, project.duration)}</span>
+                                                                    <span className="block font-bold text-gray-900">Accepted: {formatDate(project.acceptedAt)}</span>
+                                                                    <span className="block font-bold text-red-400">Days Remaining: {calculateRemainingDays(project.acceptedAt, project.duration)}</span>
                                                                     {applications.some(app => app._id === project.freelancer) ? (
                                                                         <span className="block text-green-500 font-bold">Request Accepted</span>
                                                                     ) : (

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { format, differenceInDays, addDays } from 'date-fns';
 import { useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FaUsers, FaUserCheck, FaEnvelope, FaPhone, FaCalendar, FaClock } from 'react-icons/fa';
 
 const AllRequests = () => {
   const [activeTab, setActiveTab] = useState('requests');
@@ -43,7 +45,6 @@ const AllRequests = () => {
 
       if (response.status === 200) {
         alert(`You accepted ${name}'s request and assigned them to the project.`);
-        // Refresh the lists after accepting
         const updatedRequests = requests.filter(request => request._id !== freelancerId);
         setRequests(updatedRequests);
         setSelectedPersons([...selectedPersons, response.data]);
@@ -68,114 +69,175 @@ const AllRequests = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0">
-        <div className="lg:w-1/4">
-          <h2 className="uppercase tracking-wider text-red-500 font-bold text-lg text-center mb-4">Project Actions</h2>
-          <div className="space-y-4">
-            <button
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen  text-white p-8"
+    >
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">
+          <motion.h1
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            className="text-4xl font-bold text-red-500 mb-6 lg:mb-0"
+          >
+            {projectName}
+          </motion.h1>
+          <div className="flex space-x-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab('requests')}
-              className={`w-full px-4 py-2 text-left rounded-lg ${activeTab === 'requests' ? 'bg-red-500 text-white' : 'bg-white text-gray-700 border border-gray-300'}`}
+              className={`flex items-center px-6 py-3 rounded-full ${
+                activeTab === 'requests'
+                  ? 'bg-red-600 text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              } transition duration-300`}
             >
-              All Requests
-            </button>
-            <button
+              <FaUsers className="mr-2" /> All Requests
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab('selected')}
-              className={`w-full px-4 py-2 text-left rounded-lg ${activeTab === 'selected' ? 'bg-red-500 text-white' : 'bg-white text-gray-700 border border-gray-300'}`}
+              className={`flex items-center px-6 py-3 rounded-full ${
+                activeTab === 'selected'
+                  ? 'bg-red-600 text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              } transition duration-300`}
             >
-              Selected Persons
-            </button>
+              <FaUserCheck className="mr-2" /> Selected Persons
+            </motion.button>
           </div>
         </div>
 
-        <div className="lg:w-2/4 text-center">
-          <h1 className="text-4xl font-bold text-gray-900">{projectName}</h1>
-        </div>
-      </div>
-
-      <div className="mt-12">
         {activeTab === 'requests' && (
-          <div className="bg-white p-8 shadow-lg rounded-lg">
-            <h2 className="text-xl font-semibold mb-6">All Requests</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-gray-800 p-8 rounded-xl shadow-2xl"
+          >
+            <h2 className="text-2xl font-semibold mb-6 text-red-400">All Requests</h2>
             {requests.length > 0 ? (
-              <table className="min-w-full table-auto border-collapse text-center">
-                <thead style={{ backgroundColor: 'black', color: 'white' }}>
-                  <tr>
-                    <th className="border px-4 py-2">Id No.</th>
-                    <th className="border px-4 py-2">Name</th>
-                    <th className="border px-4 py-2">Email</th>
-                    <th className="border px-4 py-2">Phone</th>
-                    <th className="border px-4 py-2">Request Date</th>
-                    <th className="border px-4 py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {requests.map((request) => (
-                    <tr key={request._id}>
-                      <td className="border px-4 py-2">{request.idNumber}</td>
-                      <td className="border px-4 py-2">{request.name}</td>
-                      <td className="border px-4 py-2 text-blue-500">
-                        <a href={`mailto:${request.email}`}>{request.email}</a>
-                      </td>
-                      <td className="border px-4 py-2">{request.phone}</td>
-                      <td className="border px-4 py-2">{formatDate(request.submittedAt)}</td>
-                      <td className="border px-4 py-2">
-                        <button
-                          onClick={() => handleAccept(request._id, request.name)}
-                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
-                        >
-                          Accept
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-gray-700 text-gray-200">
+                      <th className="px-4 py-3 text-left">Id No.</th>
+                      <th className="px-4 py-3 text-left">Name</th>
+                      <th className="px-4 py-3 text-left">Email</th>
+                      <th className="px-4 py-3 text-left">Phone</th>
+                      <th className="px-4 py-3 text-left">Request Date</th>
+                      <th className="px-4 py-3 text-left">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {requests.map((request, index) => (
+                      <motion.tr
+                        key={request._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="border-b border-gray-700 hover:bg-gray-700 transition duration-300"
+                      >
+                        <td className="px-4 py-3">{request.idNumber}</td>
+                        <td className="px-4 py-3">{request.name}</td>
+                        <td className="px-4 py-3">
+                          <a href={`mailto:${request.email}`} className="text-blue-400 hover:text-blue-300">
+                            <FaEnvelope className="inline mr-2" />{request.email}
+                          </a>
+                        </td>
+                        <td className="px-4 py-3">
+                          <FaPhone className="inline mr-2" />{request.phone}
+                        </td>
+                        <td className="px-4 py-3">
+                          <FaCalendar className="inline mr-2" />{formatDate(request.submittedAt)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleAccept(request._id, request.name)}
+                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-300"
+                          >
+                            Accept
+                          </motion.button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <p className="text-center text-gray-500">No requests available for this project.</p>
+              <p className="text-center text-gray-400">No requests available for this project.</p>
             )}
-          </div>
+          </motion.div>
         )}
 
         {activeTab === 'selected' && (
-          <div className="bg-white p-8 shadow-lg rounded-lg">
-            <h2 className="text-xl font-semibold mb-6">Selected Persons</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-gray-800 p-8 rounded-xl shadow-2xl"
+          >
+            <h2 className="text-2xl font-semibold mb-6 text-red-400">Selected Persons</h2>
             {selectedPersons.length > 0 ? (
-              <table className="table-auto w-full text-left">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="px-4 py-2">ID No.</th>
-                    <th className="px-4 py-2">Name</th>
-                    <th className="px-4 py-2">Email</th>
-                    <th className="px-4 py-2">Phone No.</th>
-                    <th className="px-4 py-2">Accepted Date</th>
-                    <th className="px-4 py-2">Given Duration (in days)</th>
-                    <th className="px-4 py-2">Remaining Days</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedPersons.map((person) => (
-                    <tr key={person._id} className="bg-gray-100">
-                      <td className="border px-4 py-2">{person.idNumber}</td>
-                      <td className="border px-4 py-2">{person.name}</td>
-                      <td className="border px-4 py-2">{person.email}</td>
-                      <td className="border px-4 py-2">{person.phone}</td>
-                      <td className="border px-4 py-2">{formatDate(person.acceptedAt)}</td>
-                      <td className="border px-4 py-2">{card.duration}</td>
-                      <td className="border px-4 py-2">
-                        {calculateRemainingDays(person.acceptedAt, card.duration)}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-gray-700 text-gray-200">
+                      <th className="px-4 py-3 text-left">ID No.</th>
+                      <th className="px-4 py-3 text-left">Name</th>
+                      <th className="px-4 py-3 text-left">Email</th>
+                      <th className="px-4 py-3 text-left">Phone No.</th>
+                      <th className="px-4 py-3 text-left">Accepted Date</th>
+                      <th className="px-4 py-3 text-left">Given Duration</th>
+                      <th className="px-4 py-3 text-left">Remaining Days</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {selectedPersons.map((person, index) => (
+                      <motion.tr
+                        key={person._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="border-b border-gray-700 hover:bg-gray-700 transition duration-300"
+                      >
+                        <td className="px-4 py-3">{person.idNumber}</td>
+                        <td className="px-4 py-3">{person.name}</td>
+                        <td className="px-4 py-3">
+                          <a href={`mailto:${person.email}`} className="text-blue-400 hover:text-blue-300">
+                            <FaEnvelope className="inline mr-2" />{person.email}
+                          </a>
+                        </td>
+                        <td className="px-4 py-3">
+                          <FaPhone className="inline mr-2" />{person.phone}
+                        </td>
+                        <td className="px-4 py-3">
+                          <FaCalendar className="inline mr-2" />{formatDate(person.acceptedAt)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <FaClock className="inline mr-2" />{card.duration} days
+                        </td>
+                        <td className="px-4 py-3">
+                          {calculateRemainingDays(person.acceptedAt, card.duration)} days
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <p className="text-center text-gray-500">No users selected for this project.</p>
+              <p className="text-center text-gray-400">No users selected for this project.</p>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

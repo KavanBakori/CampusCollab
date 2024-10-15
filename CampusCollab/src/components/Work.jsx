@@ -12,7 +12,7 @@ const Work = () => {
     {
       icon: MagnifyingGlassIcon,
       title: "Browse and Apply for Projects",
-      text: "Explore a variety of projects posted by senior students and apply to the ones that match your expertise",
+      text: "Explore a variety of projects posted by Client students and apply to the ones that match your expertise",
     },
     {
       icon: UsersIcon,
@@ -53,7 +53,7 @@ const Work = () => {
             transition={{ delay: 0.6 }}
             className="text-gray-600 text-xl max-w-3xl mx-auto"
           >
-            Unlock your potential by collaborating on real projects with senior students. Here's how Campus Collab helps you get started:
+            Unlock your potential by collaborating on real projects with Client students. Here's how Campus Collab helps you get started:
           </motion.p>
         </div>
         <div className="work-section-bottom grid grid-cols-1 md:grid-cols-3 gap-8">

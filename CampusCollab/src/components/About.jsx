@@ -61,7 +61,7 @@ const About = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1 }}
             >
-              Campus Collab connects junior students with senior projects, providing a platform for hands-on experience, skill development, and collaborative learning in a real-world setting. Join us to bridge the gap between learning and doing, and start your journey towards professional growth.
+              Campus Collab connects clients with freelancers within the collage, providing a platform for real-world collaboration, skill development, and professional growth. Whether you're looking to get your project done or gain valuable experience, Campus Collab bridges the gap between learning and doing, creating opportunities for everyone within the university. Join us to start your journey towards practical experience and career advancement.
             </motion.p>
             <motion.div 
               className="flex flex-col sm:flex-row gap-4"
